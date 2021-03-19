@@ -26,12 +26,12 @@
 #pragma once
 //=============================================================================
 #ifdef _MSC_VER
-#ifdef NLSTIME_BUILTIN_EXPORTS
-#define NLSTIME_BUILTIN_IMPEXP __declspec(dllexport)
+#ifdef NLSFILE_ARCHIVER_BUILTIN_EXPORTS
+#define NLSFILE_ARCHIVER_BUILTIN_IMPEXP __declspec(dllexport)
 #else
-#define NLSTIME_BUILTIN_IMPEXP __declspec(dllimport)
+#define NLSFILE_ARCHIVER_BUILTIN_IMPEXP __declspec(dllimport)
 #endif
 #else
-#define NLSTIME_BUILTIN_IMPEXP __attribute__((visibility("default")))
+#define NLFILE_ARCHIVER_BUILTIN_IMPEXP __attribute__((visibility("default")))
 #endif
 //=============================================================================
