@@ -25,46 +25,13 @@
 //=============================================================================
 #pragma once
 //=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
-//=============================================================================
-namespace Nelson {
-//=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
-{
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
-
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
-    }
-};
-//=============================================================================
-} // namespace Nelson
+#ifdef _MSC_VER
+#ifdef NLSGNUPLOT_BUILTIN_EXPORTS
+#define NLSGNUPLOT_BUILTIN_IMPEXP __declspec(dllexport)
+#else
+#define NLSGNUPLOT_BUILTIN_IMPEXP __declspec(dllimport)
+#endif
+#else
+#define NLSGNUPLOT_BUILTIN_IMPEXP __attribute__((visibility("default")))
+#endif
 //=============================================================================

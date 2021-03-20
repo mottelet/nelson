@@ -100,5 +100,12 @@ ArrayOf::getHandleCategory() const
     return obj->getCategory();
 }
 //=============================================================================
+int
+ArrayOf::methodLhs(const std::wstring& methodName) const
+{
+    HandleGenericObject* obj = getContentAsHandleScalar();
+    return obj->methodLhs(methodName);
+}
+//=============================================================================
 } // namespace Nelson
 //=============================================================================

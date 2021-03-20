@@ -208,3 +208,4 @@ module_skeleton/*/*.manifest
 a.out
 cmake_hdf5_test.out
 ################################################################################
+/tools/gnuplot

@@ -84,6 +84,7 @@ modules_list = [
 "ipc";
 "statistics";
 "validators"
+"gnuplot"
 ];
 % ============================================================================
 % optional modules
@@ -156,5 +157,6 @@ modules_help_list = [
 "ipc";
 "statistics";
 "validators"
+"gnuplot"
 ];
 % ============================================================================

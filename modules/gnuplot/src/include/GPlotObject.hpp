@@ -25,45 +25,45 @@
 //=============================================================================
 #pragma once
 //=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
+#include "nlsGnuplot_exports.h"
+#include "ArrayOf.hpp"
+#include "HandleGenericObject.hpp"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
+#define GPLOT_CATEGORY_STR L"gplot"
+//=============================================================================
+class NLSGNUPLOT_IMPEXP GPlotObject : public HandleGenericObject
 {
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
-
 public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
+    //=============================================================================
+    GPlotObject(void* ptr) : HandleGenericObject(GPLOT_CATEGORY_STR, ptr, false) {};
+    //=============================================================================
+    int
     methodLhs(const std::wstring& methodName)
     {
+        if (methodName == L"show") {
+            return 0;
+        }
+ 
+      if (methodName == L"drawCurve") {
+            return 0;
+        }
+        if (methodName == L"disp") {
+            return 0;
+        }
         return -1;
     }
+    //=============================================================================
+    bool
+    isMethod(const std::wstring& methodName)
+    {
+        if (methodName == L"drawCurve") {
+            return true;
+        }
+        return false;
+    };
+    //=============================================================================
 };
 //=============================================================================
 } // namespace Nelson

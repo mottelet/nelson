@@ -1211,6 +1211,13 @@ public:
     bool
     isHandleMethod(const std::wstring& methodName) const;
     /*
+    * return nLhs returned by method
+    * used for disp method to return 0
+    * -1 if not defined
+    */
+    int
+    methodLhs(const std::wstring& methodName) const;
+    /*
      * get handle category
      */
     std::wstring

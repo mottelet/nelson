@@ -23,48 +23,40 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
+#include "gfigure_dispBuiltin.hpp"
+#include "Figure.hpp"
+#include "GFigureObject.hpp"
 //=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
+using namespace Nelson;
 //=============================================================================
-namespace Nelson {
-//=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
+ArrayOfVector
+Nelson::GnuplotGateway::gfigure_dispBuiltin(
+    Evaluator* eval, int nLhs, const ArrayOfVector& argIn)
 {
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
+    ArrayOfVector retval;
+    nargincheck(argIn, 1, 1);
+    nargoutcheck(nLhs, 0, 0);
+    ArrayOf arg = argIn[0];
 
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
+    if (!arg.isHandle()) {
+        Error(_W("gfigure handle expected."));
     }
-};
-//=============================================================================
-} // namespace Nelson
+    if (arg.getHandleCategory() != GFIGURE_CATEGORY_STR) {
+        Error(_W("gfigure handle expected."));
+    }
+    Interface* io = eval->getInterface();
+    if (io != nullptr) {
+        Dimensions dimsParam1 = arg.getDimensions();
+        io->outputMessage(L"[gfigure] - size: ");
+        dimsParam1.printMe(io);
+        io->outputMessage("\n");
+        if (arg.isScalar()) {
+            std::wstring content = displayFigureInformation(arg.getContentAsHandleScalar());
+            if (!content.empty()) {
+                io->outputMessage(content);
+            }
+        }
+    }
+    return retval;
+}
 //=============================================================================

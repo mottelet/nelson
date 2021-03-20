@@ -23,48 +23,22 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
+#include "nlsConfig.h"
+#include <Windows.h>
 //=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
-//=============================================================================
-namespace Nelson {
-//=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
+int WINAPI
+DllMain(HINSTANCE hInstance, DWORD reason, PVOID pvReserved)
 {
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
-
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
+    switch (reason) {
+    case DLL_PROCESS_ATTACH:
+        break;
+    case DLL_PROCESS_DETACH:
+        break;
+    case DLL_THREAD_ATTACH:
+        break;
+    case DLL_THREAD_DETACH:
+        break;
     }
-};
-//=============================================================================
-} // namespace Nelson
+    return 1;
+}
 //=============================================================================

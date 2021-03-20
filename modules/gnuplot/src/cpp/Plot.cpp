@@ -23,48 +23,55 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
-//=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
+#include <sciplot/sciplot.hpp>
+#include "Plot.hpp"
+#include "HandleGenericObject.hpp"
+#include "HandleManager.hpp"
+#include "GPlotObject.hpp"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
+ArrayOf Plot()
 {
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
-
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
-    }
-};
+    sciplot::Plot *ptrPlot = new sciplot::Plot();
+    HandleGenericObject* hl = new GPlotObject(ptrPlot);
+    HandleManager::getInstance()->addHandle(hl);
+    return ArrayOf::handleConstructor(hl);
+}
 //=============================================================================
-} // namespace Nelson
+std::wstring
+displayPlotInformation(void* ptrHandle)
+{
+    std::wstring res;
+    if (ptrHandle) {
+        HandleGenericObject* hl = (HandleGenericObject*)ptrHandle;
+        sciplot::Plot* ptrPlot = (sciplot::Plot*)(hl->getPointer());
+    }
+    return res;
+}
+//=============================================================================
+void
+showPlot(void* ptrHandle)
+{
+    if (ptrHandle) {
+      HandleGenericObject* hl = (HandleGenericObject*)ptrHandle;
+        sciplot::Plot* ptrPlot = (sciplot::Plot*)(hl->getPointer());
+        ptrPlot->show();
+    }
+}
+//=============================================================================
+void
+drawCurve(void* ptrHandle, double *ptrX, double *ptrY, indexType nElements)
+{
+    if (ptrHandle) {
+        sciplot::Vec X(ptrX, nElements);
+        sciplot::Vec Y(ptrY, nElements);
+        HandleGenericObject* hl = (HandleGenericObject*)ptrHandle;
+        sciplot::Plot* ptrPlot = (sciplot::Plot*)(hl->getPointer());
+        ptrPlot->drawCurve(X, Y).label("");
+
+    }
+}
+//=============================================================================
+}
 //=============================================================================

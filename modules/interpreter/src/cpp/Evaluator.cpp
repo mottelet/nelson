@@ -129,7 +129,7 @@ public:
     ArrayOf endArray;
     int index = 0;
     size_t count = 0;
-    endData(ArrayOf p, int ndx, size_t cnt) : endArray(p), index(ndx), count(cnt) {}
+    endData(ArrayOf p, int ndx, size_t cnt) : endArray(p), index(ndx), count(cnt) { }
     ~endData() = default;
     ;
 };
@@ -3888,6 +3888,10 @@ Evaluator::rhsExpression(ASTPtr t)
                     }
                 }
                 rv = getHandle(r, fieldname, params);
+                if (r.methodLhs(utf8_to_wstring(fieldname)) == 0) {
+                    callstack.popID();
+                    return rv;
+                }
             } else {
                 rv = r.getFieldAsList(fieldname);
             }
@@ -3917,6 +3921,10 @@ Evaluator::rhsExpression(ASTPtr t)
             } else if (r.isHandle()) {
                 ArrayOfVector v;
                 rv = getHandle(r, field, v);
+                if (r.methodLhs(utf8_to_wstring(field)) == 0) {
+                    callstack.popID();
+                    return rv;
+                }
             } else {
                 rv = r.getFieldAsList(field);
             }
@@ -4502,7 +4510,8 @@ Evaluator::getHandle(ArrayOf r, const std::string& fieldname, const ArrayOfVecto
                 || (funcDef->type() == NLS_MACRO_FUNCTION))) {
             Error(_W("Type function not valid."));
         }
-        int nLhs = 1;
+        int nLhsToApply = r.methodLhs(utf8_to_wstring(fieldname));
+        int nLhs = nLhsToApply == -1 ? 1 : nLhsToApply;
         argIn.reserve(params.size() + 1);
         argIn.push_back(r);
         for (ArrayOf a : params) {
@@ -4517,7 +4526,8 @@ Evaluator::getHandle(ArrayOf r, const std::string& fieldname, const ArrayOfVecto
     if (!((funcDef->type() == NLS_BUILT_IN_FUNCTION) || (funcDef->type() == NLS_MACRO_FUNCTION))) {
         Error(_W("Type function not valid."));
     }
-    int nLhs = 1;
+    int nLhsToApply = r.methodLhs(utf8_to_wstring(fieldname));
+    int nLhs = nLhsToApply == -1 ? 1 : nLhsToApply;
     argIn.push_back(r);
     argIn.push_back(ArrayOf::characterArrayConstructor(fieldname));
     return funcDef->evaluateFunction(this, argIn, nLhs);

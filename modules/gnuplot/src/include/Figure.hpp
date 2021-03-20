@@ -25,46 +25,19 @@
 //=============================================================================
 #pragma once
 //=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
+#include "nlsGnuplot_exports.h"
+#include "ArrayOf.hpp"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
-{
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
-
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
-    }
-};
+NLSGNUPLOT_IMPEXP ArrayOf
+Figure();
 //=============================================================================
-} // namespace Nelson
+NLSGNUPLOT_IMPEXP std::wstring
+displayFigureInformation(void* ptrHandle);
+//=============================================================================
+NLSGNUPLOT_IMPEXP void
+showFigure(void* ptrHandle);
+//=============================================================================
+}
 //=============================================================================

@@ -23,48 +23,46 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
-//=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
+#include <sciplot/sciplot.hpp>
+#include "Figure.hpp"
+#include "HandleGenericObject.hpp"
+#include "HandleManager.hpp"
+#include "GFigureObject.hpp"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
+ArrayOf
+Figure()
 {
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
-
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
-    }
-};
+    
+    sciplot::Plot plot;
+    std::vector<std::vector<sciplot::PlotXD>> plots = { { plot } };
+    sciplot::Figure* ptrFigure = new sciplot::Figure(plots);
+    HandleGenericObject* hl = new GFigureObject(ptrFigure);
+    HandleManager::getInstance()->addHandle(hl);
+    return ArrayOf::handleConstructor(hl);
+}
 //=============================================================================
-} // namespace Nelson
+std::wstring
+displayFigureInformation(void* ptrHandle)
+{
+    std::wstring res;
+    if (ptrHandle) {
+        HandleGenericObject* hl = (HandleGenericObject*)ptrHandle;
+        sciplot::Figure* ptrFigure = (sciplot::Figure*)(hl->getPointer());
+    }
+    return res;
+}
+//=============================================================================
+void
+showFigure(void* ptrHandle)
+{
+    if (ptrHandle) {
+        HandleGenericObject* hl = (HandleGenericObject*)ptrHandle;
+        sciplot::Figure* ptrFigure = (sciplot::Figure*)(hl->getPointer());
+        ptrFigure->show();
+    }
+}
+//=============================================================================
+}
 //=============================================================================

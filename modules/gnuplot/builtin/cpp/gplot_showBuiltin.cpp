@@ -23,48 +23,29 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
+#include "gplot_showBuiltin.hpp"
+#include "Plot.hpp"
 //=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
+using namespace Nelson;
 //=============================================================================
-namespace Nelson {
-//=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
+ArrayOfVector
+Nelson::GnuplotGateway::gplot_showBuiltin(int nLhs, const ArrayOfVector& argIn)
 {
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
+    ArrayOfVector retval;
+    nargincheck(argIn, 1, 1);
+    nargoutcheck(nLhs, 0, 1);
+    ArrayOf arg = argIn[0];
 
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
+    if (!arg.isHandle()) {
+        Error(_W("gplot handle expected."));
     }
-};
-//=============================================================================
-} // namespace Nelson
+    if (arg.getHandleCategory() != GPLOT_CATEGORY_STR) {
+        Error(_W("gplot handle expected."));
+    }
+
+    if (arg.isScalar()) {
+        showPlot(arg.getContentAsHandleScalar());
+    }
+    return retval;
+}
 //=============================================================================

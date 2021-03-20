@@ -23,48 +23,52 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
+#include "gplot_drawCurveBuiltin.hpp"
+#include "Plot.hpp"
 //=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
+using namespace Nelson;
 //=============================================================================
-namespace Nelson {
-//=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
+ArrayOfVector
+Nelson::GnuplotGateway::gplot_drawCurveBuiltin(int nLhs, const ArrayOfVector& argIn)
 {
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
+    ArrayOfVector retval;
+    nargincheck(argIn, 3, 3);
+    nargoutcheck(nLhs, 0, 1);
+    ArrayOf arg = argIn[0];
+    ArrayOf X = argIn[1];
+    ArrayOf Y = argIn[2];
 
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
+    if (!arg.isHandle()) {
+        Error(_W("gplot handle expected."));
     }
-};
-//=============================================================================
-} // namespace Nelson
+    if (arg.getHandleCategory() != GPLOT_CATEGORY_STR) {
+        Error(_W("gplot handle expected."));
+    }
+
+    if (!X.isNumeric()) {
+        Error(_W("#1 numeric value expected."));
+    }
+    if (!Y.isNumeric()) {
+        Error(_W("#2 numeric value expected."));
+    }
+
+    X.promoteType(NLS_DOUBLE);
+    Y.promoteType(NLS_DOUBLE);
+
+    Dimensions dimsX = X.getDimensions();
+    Dimensions dimsY = Y.getDimensions();
+    if (!dimsX.equals(dimsY)) {
+        Error(_W("same size expected."));
+    }
+    if (!dimsX.isVector()) {
+        Error(_W("Vector expected."));
+    }
+
+    if (arg.isScalar()) {
+        drawCurve(arg.getContentAsHandleScalar(), (double*)X.getDataPointer(),
+            (double*)Y.getDataPointer(),
+            X.getElementCount());
+    }
+    return retval;
+}
 //=============================================================================

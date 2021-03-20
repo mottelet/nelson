@@ -23,48 +23,40 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
-//=============================================================================
-#include "nlsTypes_exports.h"
-#include <string>
-//=============================================================================
-namespace Nelson {
-//=============================================================================
-class NLSTYPES_IMPEXP HandleGenericObject
-{
-private:
-    std::wstring category;
-    void* ptr;
-    bool _isScoped;
+#include "Evaluator.hpp"
+#include "NelsonGateway.hpp"
+#include "createPlotObjectBuiltin.hpp"
+#include "gplot_dispBuiltin.hpp"
+#include "gplot_showBuiltin.hpp"
+#include "gplot_drawCurveBuiltin.hpp"
+#include "createFigureObjectBuiltin.hpp"
+#include "gfigure_dispBuiltin.hpp"
+#include "gfigure_showBuiltin.hpp"
 
-public:
-    HandleGenericObject(const std::wstring& _category, void* _ptr, bool isScoped);
-    virtual ~HandleGenericObject() = default;
-    ;
-    std::wstring
-    getCategory();
-    void
-    setPointer(void* _ptr);
-    void*
-    getPointer();
-    bool
-    isScoped();
-    virtual bool
-    isProperty(const std::wstring& propertyName)
-    {
-        return false;
-    };
-    virtual bool
-    isMethod(const std::wstring& methodName)
-    {
-        return false;
-    };
-    virtual int
-    methodLhs(const std::wstring& methodName)
-    {
-        return -1;
-    }
+//=============================================================================
+using namespace Nelson;
+//=============================================================================
+const std::wstring gatewayName = L"gnuplot";
+//=============================================================================
+static const nlsGateway gateway[] = {
+    { "createPlot", (void*)Nelson::GnuplotGateway::createPlotObjectBuiltin, -1, -3, CPP_BUILTIN },
+    { "gplot_disp", (void*)Nelson::GnuplotGateway::gplot_dispBuiltin, 0, -1,
+        CPP_BUILTIN_WITH_EVALUATOR },
+    { "gplot_show", (void*)Nelson::GnuplotGateway::gplot_showBuiltin, 0, 1, CPP_BUILTIN },
+    { "gplot_drawCurve", (void*)Nelson::GnuplotGateway::gplot_drawCurveBuiltin, 0, 3, CPP_BUILTIN },
+
+    { "createFigure", (void*)Nelson::GnuplotGateway::createFigureObjectBuiltin, -1, -3, CPP_BUILTIN },
+    { "gfigure_disp", (void*)Nelson::GnuplotGateway::gfigure_dispBuiltin, 0, -1,
+        CPP_BUILTIN_WITH_EVALUATOR },
+    { "gfigure_show", (void*)Nelson::GnuplotGateway::gfigure_showBuiltin, 0, 1, CPP_BUILTIN },
+
 };
 //=============================================================================
-} // namespace Nelson
+NLSGATEWAYFUNC(gateway)
+//=============================================================================
+NLSGATEWAYINFO(gateway)
+//=============================================================================
+NLSGATEWAYREMOVE(gateway)
+//=============================================================================
+NLSGATEWAYNAME()
 //=============================================================================
