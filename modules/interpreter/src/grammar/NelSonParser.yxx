@@ -172,7 +172,6 @@ argument:
   IDENT
   ;
 
-
 statementList:
    statement {$$.v.p = AbstractSyntaxTree::createNode(OP_BLOCK,$1.v.p,$1.v.p->getContext());} |
    statementList statement {$$.v.p = $1.v.p; $$.v.p->addChild($2.v.p);}
@@ -487,17 +486,18 @@ terminal:
   | CHARACTER
   | STRING
   | MAGICEND
+  | '@' IDENT {$$.v.p =  AbstractSyntaxTree::createNode(OP_FUNCTION_HANDLE_NAMED, $2.v.p, $1.v.i);}
   | symbRefList {$$.v.p = AbstractSyntaxTree::createNode(OP_RHS,$1.v.p,$1.v.p->getContext());}
   | '[' matrixDef ']' {$$.v.p = $2.v.p;}
   | '[' error {yyxpt(_("a matrix definition followed by a right bracket"),$1);}
-  | '[' rowSeperator matrixDef ']' {$$.v.p = $3.v.p;}
-  | '[' matrixDef rowSeperator ']' {$$.v.p = $2.v.p;}
-  | '[' rowSeperator matrixDef rowSeperator ']' {$$.v.p = $3.v.p;}
+  | '[' rowSeparator matrixDef ']' {$$.v.p = $3.v.p;}
+  | '[' matrixDef rowSeparator ']' {$$.v.p = $2.v.p;}
+  | '[' rowSeparator matrixDef rowSeparator ']' {$$.v.p = $3.v.p;}
 	| '[' ']' {$$.v.p = AbstractSyntaxTree::createNode(OP_EMPTY,NULL,$1.v.i);}
   | '{' cellDef '}' {$$.v.p = $2.v.p;}
-  | '{' rowSeperator cellDef '}' {$$.v.p = $3.v.p;}
-  | '{' cellDef rowSeperator '}' {$$.v.p = $2.v.p;}
-  | '{' rowSeperator cellDef rowSeperator '}' {$$.v.p = $3.v.p;}
+  | '{' rowSeparator cellDef '}' {$$.v.p = $3.v.p;}
+  | '{' cellDef rowSeparator '}' {$$.v.p = $2.v.p;}
+  | '{' rowSeparator cellDef rowSeparator '}' {$$.v.p = $3.v.p;}
 	| '{' '}' {$$.v.p = AbstractSyntaxTree::createNode(OP_EMPTY_CELL,NULL,$1.v.i);}
 	| '{' error {yyxpt(_("a cell-array definition followed by a right brace"),$1);};
 
@@ -530,15 +530,15 @@ indexList:
 
 cellDef:
        rowDef {$$.v.p = AbstractSyntaxTree::createNode(OP_BRACES,$1.v.p,$1.v.p->getContext());}|
-       cellDef rowSeperator rowDef {$$.v.p = $1.v.p; $$.v.p->addChild($3.v.p);}
+       cellDef rowSeparator rowDef {$$.v.p = $1.v.p; $$.v.p->addChild($3.v.p);}
        ;
 
 matrixDef:
        rowDef {$$.v.p = AbstractSyntaxTree::createNode(OP_BRACKETS,$1.v.p,$1.v.p->getContext());}|
-       matrixDef rowSeperator rowDef {$$.v.p = $1.v.p; $$.v.p->addChild($3.v.p);}
+       matrixDef rowSeparator rowDef {$$.v.p = $1.v.p; $$.v.p->addChild($3.v.p);}
        ;
 
-rowSeperator:
+rowSeparator:
        ENDSTMNT | ENDQSTMNT
        ;
 

@@ -671,6 +671,12 @@ Evaluator::expression(AbstractSyntaxTreePtr t)
                 }
             }
         } break;
+        case OP_FUNCTION_HANDLE_NAMED: {
+            std::string ident = t->down->text;
+            function_handle fhptr;
+            fhptr.name = ident;
+            return ArrayOf::functionHandleConstructor(fhptr);
+        } break;
         default: {
             Error(ERROR_UNRECOGNIZED_EXPRESSION);
         } break;

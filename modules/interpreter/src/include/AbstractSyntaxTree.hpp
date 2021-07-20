@@ -98,11 +98,9 @@ typedef enum
     OP_RSTATEMENT,
     OP_QSTATEMENT,
     OP_SCALL,
-    OP_CCALL,
-    OP_SAVE,
-    OP_LOAD,
     OP_KEYWORD,
-    OP_DOTDYN
+    OP_DOTDYN,
+    OP_FUNCTION_HANDLE_NAMED
 } OP_TYPE;
 //=============================================================================
 class AbstractSyntaxTree;
