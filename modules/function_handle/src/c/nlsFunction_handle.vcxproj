@@ -168,6 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\cpp\AnonymousFunctionName.cpp" />
     <ClCompile Include="..\cpp\FunctionHandleDisplay.cpp" />
     <ClCompile Include="..\cpp\FunctionHandleIsEqual.cpp" />
     <ClCompile Include="..\cpp\StringToFunctionHandle.cpp" />
@@ -194,6 +195,7 @@
     <Text Include="..\..\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\AnonymousFunctionName.hpp" />
     <ClInclude Include="..\include\FunctionHandleDisplay.hpp" />
     <ClInclude Include="..\include\FunctionHandleIsEqual.hpp" />
     <ClInclude Include="..\include\nlsFunction_handle_exports.h" />

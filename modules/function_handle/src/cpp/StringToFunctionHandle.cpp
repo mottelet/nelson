@@ -23,23 +23,66 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
+#include <boost/algorithm/string.hpp>
 #include "StringToFunctionHandle.hpp"
 #include "characters_encoding.hpp"
 #include "IsValidVariableName.hpp"
+#include "ParserInterface.hpp"
+#include "AbstractSyntaxTree.hpp"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
 function_handle
-StringToFunctionHandle(const std::wstring& functionName)
+StringToFunctionHandle(const std::wstring& anonymousFunctionOrFunctionName)
 {
     function_handle functionHandle;
+    std::wstring _anonymousFunctionOrFunctionName
+        = boost::algorithm::trim_left_copy(anonymousFunctionOrFunctionName);
+    boost::algorithm::trim_right(_anonymousFunctionOrFunctionName);
+    if (!_anonymousFunctionOrFunctionName.empty() && _anonymousFunctionOrFunctionName[0] == L'@') {
+        _anonymousFunctionOrFunctionName = _anonymousFunctionOrFunctionName.substr(
+            1, _anonymousFunctionOrFunctionName.length());
+        boost::algorithm::trim_left(_anonymousFunctionOrFunctionName);
+        _anonymousFunctionOrFunctionName = L"@" + _anonymousFunctionOrFunctionName;
+        ParserState parserState = ParseError;
+        parserState = parseString(wstring_to_utf8(_anonymousFunctionOrFunctionName) + "\n");
+        if (parserState == ScriptBlock) {
+            AbstractSyntaxTreePtr tree = getParsedScriptBlock();
+            AbstractSyntaxTreePtr t = tree->down->down;
+            if (t->opNum == OP_FUNCTION_HANDLE_ANONYMOUS) {
+                stringVector arguments = t->down->toStringList();
+                AbstractSyntaxTreePtr code = t->down->right;
+                AbstractSyntaxTree::serialize(code, functionHandle.expressionSerialized);
+                functionHandle.anonymous = wstring_to_utf8(_anonymousFunctionOrFunctionName);
+                functionHandle.arguments = arguments;
+
+            } else {
+                Error(_W("valid anonymous function handle expected."));
+            }
+        }
+    } else {
+        if (IsValidVariableName(_anonymousFunctionOrFunctionName)) {
+            functionHandle.name = wstring_to_utf8(_anonymousFunctionOrFunctionName);
+            functionHandle.anonymous.clear();
+        }
+    }
+
+    /*
     if (IsValidVariableName(functionName)) {
         functionHandle.name = wstring_to_utf8(functionName);
         functionHandle.anonymous.clear();
     } else {
         functionHandle.name.clear();
-        functionHandle.anonymous.clear();
+        ParserState parserState = ParseError;
+        parserState = parseString(wstring_to_utf8(functionName) + "\n");
+        if (parserState == ScriptBlock) {
+            AbstractSyntaxTreePtr tree = getParsedScriptBlock();
+            functionHandle.arguments = tree->toStringList();
+            functionHandle.anonymous = wstring_to_utf8(functionName);
+            AbstractSyntaxTree::serialize(tree, functionHandle.expressionSerialized);
+        }
     }
+    */
     return functionHandle;
 }
 //=============================================================================

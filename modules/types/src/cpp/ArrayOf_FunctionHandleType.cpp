@@ -25,6 +25,7 @@
 //=============================================================================
 #include "ArrayOf.hpp"
 #include "Error.hpp"
+#include "characters_encoding.hpp"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
@@ -46,44 +47,63 @@ ArrayOf::getContentAsFunctionHandle()
     if (classString == NLS_FUNCTION_HANDLE_STR) {
         ArrayOf nameField = this->getField("name");
         ArrayOf anonymousField = this->getField("anonymous");
+        ArrayOf argumentsField = this->getField("arguments");
+        ArrayOf codeField = this->getField("code");
         fh.name = nameField.getContentAsCString();
         fh.anonymous = anonymousField.getContentAsCString();
+        fh.arguments = argumentsField.getContentAsCStringVector();
+
+        indexType codeLength = codeField.getElementCount();
+        char* ptr = (char*)codeField.getDataPointer();
+        std::vector<char> serializedCode;
+        serializedCode.reserve(codeLength);
+        for (size_t k = 0; k < codeLength; ++k) {
+            serializedCode.push_back(ptr[k]);
+        }
+        fh.expressionSerialized = serializedCode;
     } else {
         Error(_W("Expected a function_handle."));
     }
     return fh;
 }
-//=============================================================================
+//============= ================================================================
 ArrayOf
 ArrayOf::functionHandleConstructor(const std::wstring& functionName, const std::wstring& anonymous)
 {
-    stringVector fieldnames;
-    ArrayOfVector fieldvalues;
-    fieldnames.push_back("name");
-    fieldnames.push_back("anonymous");
+    function_handle fptr;
 
-    fieldvalues.push_back(ArrayOf::characterArrayConstructor(functionName));
-    fieldvalues.push_back(ArrayOf::characterArrayConstructor(anonymous));
-
-    ArrayOf res = structConstructor(fieldnames, fieldvalues);
-    res.setStructType(NLS_FUNCTION_HANDLE_STR);
-    return res;
+    fptr.name = wstring_to_utf8(functionName);
+    fptr.anonymous.clear();
+    fptr.arguments.clear();
+    fptr.expressionSerialized.clear();
+    return functionHandleConstructor(fptr);
 }
 //=============================================================================
 ArrayOf
 ArrayOf::functionHandleConstructor(function_handle fptr)
 {
-    stringVector fieldnames;
-    ArrayOfVector fieldvalues;
-    fieldnames.push_back("name");
-    fieldnames.push_back("anonymous");
+    ArrayOf structArray = ArrayOf::emptyConstructor(0, 0);
+    structArray.setField("name", ArrayOf::characterArrayConstructor(fptr.name));
+    structArray.setField("anonymous", ArrayOf::characterArrayConstructor(fptr.anonymous));
 
-    fieldvalues.push_back(ArrayOf::characterArrayConstructor(fptr.name));
-    fieldvalues.push_back(ArrayOf::characterArrayConstructor(fptr.anonymous));
+    Dimensions dimsArguments(1, fptr.arguments.size());
+    ArrayOf* elements = (ArrayOf*)ArrayOf::allocateArrayOf(NLS_CELL_ARRAY, fptr.arguments.size());
+    ArrayOf arguments = ArrayOf(NLS_CELL_ARRAY, dimsArguments, elements);
 
-    ArrayOf res = structConstructor(fieldnames, fieldvalues);
-    res.setStructType(NLS_FUNCTION_HANDLE_STR);
-    return res;
+    for (size_t k = 0; k < fptr.arguments.size(); ++k) {
+        elements[k] = ArrayOf::characterArrayConstructor(fptr.arguments[k]);
+    }
+    structArray.setField("arguments", arguments);
+ 
+    Dimensions dimsCode(1, fptr.expressionSerialized.size());
+    int8* ptr = (int8*)ArrayOf::allocateArrayOf(NLS_INT8, fptr.expressionSerialized.size());
+    memcpy(ptr, fptr.expressionSerialized.data(), fptr.expressionSerialized.size() * sizeof(char));
+    ArrayOf code = ArrayOf(NLS_INT8, dimsCode, ptr);
+
+    structArray.setField("code", code);
+
+    structArray.setStructType(NLS_FUNCTION_HANDLE_STR);
+    return structArray;
 }
 //=============================================================================
 } // namespace Nelson

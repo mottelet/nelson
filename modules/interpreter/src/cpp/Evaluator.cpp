@@ -671,6 +671,25 @@ Evaluator::expression(AbstractSyntaxTreePtr t)
                 }
             }
         } break;
+        case OP_FUNCTION_HANDLE_ANONYMOUS: {
+            stringVector arguments;
+            AbstractSyntaxTreePtr code;
+            if (t->down->right == nullptr) {
+                code = t->down;
+            } else {
+                arguments = t->down->toStringList();
+                code = t->down->right;
+            }
+            std::string codeAsString = AbstractSyntaxTree::toString(code);
+            std::vector<char> serializedCode;
+            AbstractSyntaxTree::serialize(code, serializedCode);
+            function_handle fhptr;
+            fhptr.name.clear();
+            fhptr.anonymous = codeAsString;
+            fhptr.expressionSerialized = serializedCode;
+            fhptr.arguments = arguments;
+            return ArrayOf::functionHandleConstructor(fhptr);
+        } break;
         case OP_FUNCTION_HANDLE_NAMED: {
             std::string ident = t->down->text;
             function_handle fhptr;

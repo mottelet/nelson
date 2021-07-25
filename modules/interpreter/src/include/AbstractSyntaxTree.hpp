@@ -91,8 +91,6 @@ typedef enum
     OP_BRACKETS,
     OP_DOT,
     OP_ALL,
-    OP_INDEX_LIST,
-    OP_ROW_DEF,
     OP_SEMICOLON,
     OP_NULL,
     OP_RSTATEMENT,
@@ -100,6 +98,7 @@ typedef enum
     OP_SCALL,
     OP_KEYWORD,
     OP_DOTDYN,
+    OP_FUNCTION_HANDLE_ANONYMOUS,
     OP_FUNCTION_HANDLE_NAMED
 } OP_TYPE;
 //=============================================================================
@@ -124,6 +123,14 @@ public:
     OP_TYPE opNum;
     //=============================================================================
     static AbstractSyntaxTreePtrVector astUsedAsVector;
+    //=============================================================================
+    static void serialize(AbstractSyntaxTreePtr expr, std::vector<char> &data);
+    //=============================================================================
+    static AbstractSyntaxTreePtr
+    unserialize(const std::vector<char> &data);
+    //=============================================================================
+    static std::string
+    toString(AbstractSyntaxTreePtr expr);
     //=============================================================================
     static AbstractSyntaxTreePtr
     createNode(NODE_TYPE ntype, const char* name, int context);
@@ -211,6 +218,9 @@ public:
     ~AbstractSyntaxTree();
 
 private:
+    static AbstractSyntaxTreePtr
+    unserialize(size_t& pos, const std::vector<char>& data);
+
     /** Default constructor
      * Creates an empty AST node.  All pointers are initialized to NULL,
      * the type is set to non_terminal.
@@ -245,6 +255,10 @@ private:
     AbstractSyntaxTree(OP_TYPE op, AbstractSyntaxTreePtr arg, int context);
 
     static AbstractSyntaxTreePtrVector pAstVector;
+
+    static std::string
+    toString(AbstractSyntaxTreePtr expr, const std::string &operatorStr);
+    //=============================================================================
 };
 //=============================================================================
 /**

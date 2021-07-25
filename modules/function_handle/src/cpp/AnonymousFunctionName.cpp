@@ -23,24 +23,31 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
+#include "AnonymousFunctionName.hpp"
 //=============================================================================
 namespace Nelson {
-/**
- * These are the different parser states that
- * the parser can be in after a successful parse:
- *    - ScriptBlock corresponds to a parse of a sequence
- *      of statements
- *    - FuncDef corresponds to a parse of a function def
- *    - ParseError corresponds to a syntax error when
- *      parsing.
- */
-typedef enum
-{
-    ScriptBlock,
-    FuncDef,
-    ParseError
-} ParserState;
 //=============================================================================
-} // namespace Nelson
+std::string
+AnonymousFunctionName(function_handle afh)
+{
+    std::string name;
+    if (!afh.anonymous.empty()) {
+        if (afh.anonymous[0] != '@') {
+            std::string arguments;
+            for (size_t k = 0; k < afh.arguments.size(); ++k) {
+                if (k == 0) {
+                    arguments = afh.arguments[k];
+                } else {
+                    arguments = arguments + "," + afh.arguments[k];
+                }
+            }
+            name = "@(" + arguments + ")" + afh.anonymous;
+        } else {
+            name = afh.anonymous;
+        }
+    }
+    return name;
+}
+//=============================================================================
+}
 //=============================================================================

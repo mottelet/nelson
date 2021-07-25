@@ -31,6 +31,6 @@
 //=============================================================================
 namespace Nelson {
 NLSFUNCTION_HANDLE_IMPEXP function_handle
-StringToFunctionHandle(const std::wstring& functionName);
+StringToFunctionHandle(const std::wstring& anonymousFunctionOrFunctionName);
 }
 //=============================================================================

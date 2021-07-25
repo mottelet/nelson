@@ -86,6 +86,8 @@ typedef struct
 {
     std::string name;
     std::string anonymous;
+    std::vector<std::string> arguments;
+    std::vector<char> expressionSerialized;
 } function_handle;
 
 #define doublecomplex std::complex<double>

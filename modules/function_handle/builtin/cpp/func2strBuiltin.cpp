@@ -26,8 +26,7 @@
 #include "func2strBuiltin.hpp"
 #include "OverloadFunction.hpp"
 #include "Error.hpp"
-#include "PathFuncManager.hpp"
-#include "BuiltInFunctionDefManager.hpp"
+#include "AnonymousFunctionName.hpp"
 //=============================================================================
 using namespace Nelson;
 //=============================================================================
@@ -49,7 +48,15 @@ Nelson::FunctionHandleGateway::func2strBuiltin(
             if (fh.anonymous.empty()) {
                 retval << ArrayOf::characterArrayConstructor(fh.name);
             } else {
-                retval << ArrayOf::characterArrayConstructor(fh.anonymous);
+                std::string arguments;
+                for (size_t k = 0; k < fh.arguments.size(); ++k) {
+                    if (k == 0) {
+                        arguments = fh.arguments[k];
+                    } else {
+                        arguments = arguments + "," + fh.arguments[k];
+                    }
+                }
+                retval << ArrayOf::characterArrayConstructor(AnonymousFunctionName(fh));
             }
         } else {
             retval = OverloadFunction(eval, nLhs, argIn, "func2str", bSuccess);

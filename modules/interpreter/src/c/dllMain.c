@@ -26,6 +26,7 @@
 #include <Windows.h>
 #include "nlsConfig.h"
 //=============================================================================
+#pragma comment(lib, "wsock32.lib")
 #pragma comment(lib, CAT_3_STRINGS("boost_system-", BOOST_TARGET, ".lib"))
 #pragma comment(lib, CAT_3_STRINGS("boost_filesystem-", BOOST_TARGET, ".lib"))
 //=============================================================================

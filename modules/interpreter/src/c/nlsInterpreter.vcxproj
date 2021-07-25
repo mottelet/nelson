@@ -212,6 +212,8 @@
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\cpp\AbstractSyntaxTreeHelpers.cpp" />
+    <ClCompile Include="..\cpp\AbstractSyntaxTreeSerialization.cpp" />
     <ClCompile Include="..\cpp\ActionMenu.cpp" />
     <ClCompile Include="..\cpp\AdditionOperator.cpp" />
     <ClCompile Include="..\cpp\AndOperator.cpp" />

@@ -26,8 +26,7 @@
 #include "FunctionHandleDisplay.hpp"
 #include "BuiltInFunctionDefManager.hpp"
 #include "Error.hpp"
-#include "MacroFunctionDef.hpp"
-#include "PathFuncManager.hpp"
+#include "AnonymousFunctionName.hpp"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
@@ -40,11 +39,11 @@ FunctionHandleDisplay(Evaluator* eval, ArrayOf Var)
     Interface* io = eval->getInterface();
     if (io != nullptr) {
         function_handle fh = Var.getContentAsFunctionHandle();
-        if (fh.anonymous.empty()) {
+        if (fh.expressionSerialized.empty()) {
             io->outputMessage("@" + fh.name);
             io->outputMessage("\n");
         } else {
-            io->outputMessage("@" + fh.anonymous);
+            io->outputMessage(AnonymousFunctionName(fh));
             io->outputMessage("\n");
         }
     }
