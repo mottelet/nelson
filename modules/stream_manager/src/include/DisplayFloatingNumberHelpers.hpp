@@ -27,73 +27,89 @@
 //=============================================================================
 #include <string>
 #include "ArrayOf.hpp"
-#include "Interface.hpp"
+#include "Types.hpp"
 #include "NelsonConfiguration.hpp"
 #include "nlsStream_manager_exports.h"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
-#define HORIZONTAL_ELLIPSIS L"\U00002026" // L"…"
-#define BLANKS_AT_BOL L"    "
-#define LENGTH_BLANKS_AT_BOL 4
-#define DEFAULT_NOMINAL_WIDTH 10
-//=============================================================================
-template <typename I>
+NLSSTREAM_MANAGER_IMPEXP
 std::wstring
-hexify(I w, size_t hex_len = sizeof(I) << 1)
-{
-    static const wchar_t* digits = L"0123456789abcdef";
-    std::wstring rc(hex_len, '0');
-    for (size_t i = 0, j = (hex_len - 1) * 4; i < hex_len; ++i, j -= 4) {
-        rc[i] = digits[(w >> j) & 0x0f];
-    }
-    return rc;
-}
+formatShort(double number, bool trim = false);
 //=============================================================================
-NLSSTREAM_MANAGER_IMPEXP void
-DisplayVariableHeader(Interface* io, const ArrayOf& A, const std::wstring& name);
-//=============================================================================
-NLSSTREAM_MANAGER_IMPEXP void
-DisplayVariableValue(Interface* io, const ArrayOf& A, const std::wstring& name);
-//=============================================================================
-NLSSTREAM_MANAGER_IMPEXP void
-DisplayVariableFooter(Interface* io, const ArrayOf& A, const std::wstring& name);
-//=============================================================================
-NLSSTREAM_MANAGER_IMPEXP std::wstring
-completeWithBlanksAtBeginning(const std::wstring& msg, size_t width);
-//=============================================================================
-NLSSTREAM_MANAGER_IMPEXP std::wstring
-summarizeStringArray(const ArrayOf& A, size_t beginingLineLength, size_t termWidth);
-//=============================================================================
-NLSSTREAM_MANAGER_IMPEXP std::wstring
-summarizeCellEntry(const ArrayOf& A, size_t beginingLineLength, size_t termWidth,
-    NumericFormatDisplay currentNumericFormat);
-//=============================================================================
-NLSSTREAM_MANAGER_IMPEXP std::wstring
-lightDescription(const ArrayOf& A, const std::wstring& firstChar, const std::wstring& lastChar);
-//=============================================================================
-NLSSTREAM_MANAGER_IMPEXP std::wstring
-sprintElement(const void* dp, indexType num, Class dcls, NumericFormatDisplay currentNumericFormat,
-    LineSpacingDisplay currentLineSpacing, indexType width, int exponential);
-//=============================================================================
-NLSSTREAM_MANAGER_IMPEXP std::wstring
-columnsHeader(indexType startCol, indexType endCol);
-//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
 std::wstring
-outputDoublePrecisionFloat(double num, NumericFormatDisplay currentNumericFormat,
-    int exponantial = 0, bool trim = false);
+formatShort(single number, bool trim = false);
 //=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
 std::wstring
-outputDoubleComplexPrecisionFloat(double realPart, double imagPart,
-    NumericFormatDisplay currentNumericFormat, int exponantial = 0, bool trim = false);
+formatComplexShort(double realPart, double imagPart, bool trim = false);
 //=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
 std::wstring
-outputSinglePrecisionFloat(single num, NumericFormatDisplay currentNumericFormat,
-    int exponantial = 0, bool trim = false);
+formatComplexShort(single realPart, single imagPart, bool trim = false);
 //=============================================================================
-static std::wstring
-outputSingleComplexPrecisionFloat(single realPart, single imagPart,
-    NumericFormatDisplay currentNumericFormat, int exponantial = 0, bool trim = false);
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatShortEng(double number, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatShortEng(single number, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatComplexShortEng(double realPart, double imagPart, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatComplexShortEng(single realPart, single imagPart, bool trim = false);
+//=============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatRational(double number, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatRational(single number, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatComplexRational(double realPart, double imagPart, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatComplexRational(single realPart, single imagPart, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatPlus(double number, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatPlus(single number, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatComplexPlus(double realPart, double imagPart, bool trim = false);
+//=============================================================================
+NLSSTREAM_MANAGER_IMPEXP
+std::wstring
+formatComplexPlus(single realPart, single imagPart, bool trim = false);
 //=============================================================================
 } // namespace Nelson
 //=============================================================================
