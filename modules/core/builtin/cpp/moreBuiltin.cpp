@@ -23,72 +23,42 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
-//=============================================================================
-#include "Interface.hpp"
-#include "nlsTerminal_exports.h"
-#include <string>
+#include "moreBuiltin.hpp"
+#include "Error.hpp"
 //=============================================================================
 using namespace Nelson;
 //=============================================================================
-class NLSTERMINAL_IMPEXP BsdTerminal : public Interface
+// more('on')
+// more('off')
+// more(5)
+// old = more('on')
+// old = more('off')
+// old = more(5)
+// more('default')
+// [status, n] = more()
+//=============================================================================
+ArrayOfVector
+Nelson::CoreGateway::moreBuiltin(Evaluator* eval, int nLhs, const ArrayOfVector& argIn)
 {
-private:
-public:
-    BsdTerminal();
-    ~BsdTerminal();
-    /**
-     *  Get a line of input from the user with the
-     *  given prompt.
-     */
-    std::wstring
-    getLine(const std::wstring& prompt);
-    std::string
-    getLine(const std::string& prompt);
-    std::wstring
-    getInput(const std::wstring& prompt);
-    /**
-     *  Return the width of the current "terminal" in
-     *  characters.
-     */
-    size_t
-    getTerminalWidth();
-    /**
-     *  Output the following text message.
-     */
-    void
-    outputMessage(const std::wstring& msg);
-    void
-    outputMessage(const std::string& msg);
-    /**
-     *  Output the following error message.
-     */
-    void
-    errorMessage(const std::wstring& msg);
-    void
-    errorMessage(const std::string& msg);
-    /**
-     *  Output the following warning message.
-     */
-    void
-    warningMessage(const std::wstring& msg);
-    void
-    warningMessage(const std::string& msg);
-
-    void
-    clearTerminal();
-    bool
-    isAtPrompt();
-
-    void
-    interruptGetLineByEvent() override;
-
-    bool
-    moreSupported() override;
-
-private:
-    std::wstring
-    getTextLine(const std::wstring& prompt, bool bIsInput);
-    bool atPrompt;
-};
+    ArrayOfVector retval;
+    nargincheck(argIn, 0, 1);
+    Interface* io = eval->getInterface();
+    if (io == nullptr || !io->moreSupported())
+    {
+        Error(_W("'more' function not supported in this interface mode."), L"Nelson:more:functionNotSupported.");
+    }
+    switch (argIn.size()) {
+    case 0: {
+        nargoutcheck(nLhs, 0, 2);
+    } break;
+    case 1: {
+        nargoutcheck(nLhs, 0, 1);
+    }
+    default: {
+      // never
+    } break;
+    }
+    
+    return retval;
+}
 //=============================================================================

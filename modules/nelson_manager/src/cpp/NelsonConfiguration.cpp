@@ -76,6 +76,21 @@ NelsonConfiguration::setInterruptPending(bool bInterruptPending)
     return bPrevious;
 }
 //=============================================================================
+bool
+NelsonConfiguration::getInterruptDisplay()
+{
+    return InterruptDisplay;
+}
+//=============================================================================
+bool
+NelsonConfiguration::setInterruptDisplay(bool bInterruptDisplay)
+{
+    bool bPrevious = InterruptDisplay;
+    InterruptDisplay = bInterruptDisplay;
+    return bPrevious;
+}
+//=============================================================================
+
 NumericFormatDisplay
 NelsonConfiguration::setNumericFormatDisplay(NumericFormatDisplay desiredOutputFormatDisplay)
 {

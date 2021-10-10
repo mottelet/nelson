@@ -70,6 +70,7 @@ public slots:
     sendKeyEvent(QKeyEvent* event);
 
 private:
+    bool waitMoreInProgress;
     typedef enum
     {
         WARNING_DISP,
@@ -142,5 +143,7 @@ public Q_SLOTS:
     sendReturnKey();
     void
     helpOnSelection();
+    std::wstring
+    waitKey();
 };
 //=============================================================================

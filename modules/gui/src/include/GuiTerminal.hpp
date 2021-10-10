@@ -94,8 +94,14 @@ public:
     void
     interruptGetLineByEvent() override;
 
+    bool
+    moreSupported() override;
+
 private:
+    int lineCounter;
     std::wstring
     getTextLine(const std::wstring& prompt, bool bIsInput = false);
+    bool
+    waitMore();
 };
 //=============================================================================

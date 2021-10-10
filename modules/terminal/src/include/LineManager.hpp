@@ -40,8 +40,6 @@ private:
     bool bUsesColors;
 
     void
-    backSpace();
-    void
     doBeep();
 
 public:
@@ -210,4 +208,7 @@ public:
      */
     void
     addCharacterCurrentLine(wchar_t ch);
+
+        void
+    backSpace();
 };

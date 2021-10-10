@@ -747,8 +747,8 @@ printMatrixValue(Interface* io, const ArrayOf& A)
             = static_cast<indexType>(ceil(columns / (static_cast<single>(colsPerPage))));
         bool withColumsHeader = (rows * columns > 1) && pageCount > 1;
 
-        for (indexType k = 0;
-             k < pageCount && !NelsonConfiguration::getInstance()->getInterruptPending(); k++) {
+        bool stopDisplay = false;
+        for (indexType k = 0; k < pageCount && !stopDisplay; k++) {
 
             indexType colsInThisPage = columns - colsPerPage * k;
             colsInThisPage = (colsInThisPage > colsPerPage) ? colsPerPage : colsInThisPage;
@@ -787,6 +787,12 @@ printMatrixValue(Interface* io, const ArrayOf& A)
             q = 0;
 
             for (indexType i = 0; i < rows; i++) {
+                if (NelsonConfiguration::getInstance()->getInterruptDisplay()) {
+                    NelsonConfiguration::getInstance()->setInterruptDisplay(false);
+                    stopDisplay = true;
+                    break;
+                }
+                std::wstring bufferLine;
                 for (indexType j = 0; j < colsInThisPage; j++) {
                     std::wstring msg = values[q];
                     size_t add = 0;
@@ -794,25 +800,13 @@ printMatrixValue(Interface* io, const ArrayOf& A)
                         add = vSize[j] - msg.length();
                     }
                     msg.append(add, L' ');
-                    io->outputMessage(BLANKS_AT_BOL);
-                    io->outputMessage(msg);
+                    bufferLine.append(BLANKS_AT_BOL);
+                    bufferLine.append(msg);
                     q++;
                 }
-                io->outputMessage(L"\n");
+                bufferLine.append(L"\n");
+                io->outputMessage(bufferLine);
             }
-            /*
-            for (indexType j = 0; j < colsInThisPage; j++) {
-                std::wstring msg = values[q];
-                size_t add = 0;
-                if (vSize[j] > msg.length()) {
-                    add = vSize[j] - msg.length();
-                }
-                msg.append(add, L' ');
-                io->outputMessage(BLANKS_AT_BOL);
-                io->outputMessage(msg);
-            }
-            io->outputMessage("\n");
-            */
         }
     }
 }

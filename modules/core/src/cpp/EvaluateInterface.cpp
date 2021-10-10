@@ -114,3 +114,9 @@ void
 EvaluateInterface::interruptGetLineByEvent()
 {}
 //=============================================================================
+bool
+EvaluateInterface::moreSupported()
+{
+    return false;
+}
+//=============================================================================

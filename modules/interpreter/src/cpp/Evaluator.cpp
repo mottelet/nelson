@@ -140,6 +140,13 @@ sigInterrupt(int arg)
 }
 //=============================================================================
 void
+displayInterrupt(int arg)
+{
+    NelsonConfiguration::getInstance()->setInterruptDisplay(true);
+}
+//=============================================================================
+
+void
 Evaluator::clearStacks()
 {
     callstack.clear();
@@ -1992,6 +1999,7 @@ Evaluator::block(AbstractSyntaxTreePtr t)
         }
         while ((state < NLS_STATE_QUIT) && s != nullptr) {
             if (NelsonConfiguration::getInstance()->getInterruptPending()) {
+                NelsonConfiguration::getInstance()->setInterruptDisplay(false);
                 NelsonConfiguration::getInstance()->setInterruptPending(false);
                 Error(MSG_CTRL_C_DETECTED);
             }
@@ -3905,6 +3913,7 @@ Evaluator::evaluateString(const std::string& line, bool propogateException)
     AbstractSyntaxTreePtr tree = nullptr;
     ParserState parserState = ParseError;
     NelsonConfiguration::getInstance()->setInterruptPending(false);
+    NelsonConfiguration::getInstance()->setInterruptDisplay(false);
     if (line.size() == 0) {
         return false;
     }

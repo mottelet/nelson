@@ -69,6 +69,12 @@ public:
     bool
     setInterruptPending(bool bInterruptPending);
     //=============================================================================
+    bool
+    getInterruptDisplay();
+    bool
+    setInterruptDisplay(bool bInterruptDisplay);
+    //=============================================================================
+
     NumericFormatDisplay
     setNumericFormatDisplay(NumericFormatDisplay desiredNumericFormatDisplay);
     NumericFormatDisplay
@@ -106,6 +112,11 @@ private:
      * Pending control-C
      */
     bool InterruptPending;
+    //=============================================================================
+    /**
+     * Interrupt display (pager)
+     */
+    bool InterruptDisplay;
     //=============================================================================
     /**
      * Current numeric format

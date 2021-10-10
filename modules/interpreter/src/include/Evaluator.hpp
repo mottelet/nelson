@@ -914,5 +914,7 @@ private:
 NLSINTERPRETER_IMPEXP void
 sigInterrupt(int arg);
 NLSINTERPRETER_IMPEXP void
+displayInterrupt(int arg);
+NLSINTERPRETER_IMPEXP void
 ExitInterrupt(int arg);
 } // namespace Nelson

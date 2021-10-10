@@ -370,6 +370,11 @@ DisplayFloatingNumberInternal(Interface* io, const ArrayOf& A, const std::string
         indexType block_page = 0;
         bool continueDisplay = true;
         for (indexType k = 0; k < pageCount && continueDisplay; k++) {
+          if (NelsonConfiguration::getInstance()->getInterruptDisplay()) {
+                NelsonConfiguration::getInstance()->setInterruptDisplay(false);
+                continueDisplay = false;
+                break;
+            }
             if (NelsonConfiguration::getInstance()->getInterruptPending()) {
                 continueDisplay = false;
                 break;

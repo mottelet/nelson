@@ -36,6 +36,7 @@ static QtMainWindow* qtMainWindow = nullptr;
 //=============================================================================
 GuiTerminal::GuiTerminal(void* qtMainW)
 {
+    lineCounter = 0;
     qtMainWindow = reinterpret_cast<QtMainWindow*>(qtMainW);
     qtterm = qtMainWindow->getQtTerminal();
 }
@@ -127,6 +128,13 @@ GuiTerminal::outputMessage(const std::wstring& msg)
             qtterm->clearLine();
             qtterm->sendReturnKey();
         }
+        size_t nbEOL = std::count(msg.begin(), msg.end(), L'\n');
+        lineCounter = lineCounter + nbEOL;
+        if (lineCounter >= 40)
+        {
+            waitMore();
+        }
+
         qtterm->outputMessage(_msg);
         this->diary.writeMessage(_msg);
     }
@@ -181,6 +189,8 @@ GuiTerminal::warningMessage(const std::wstring& msg)
 void
 GuiTerminal::clearTerminal()
 {
+    lineCounter = 0;
+
     if (qtterm) {
         qtterm->clearTerminal();
     }
@@ -237,3 +247,19 @@ GuiTerminal::interruptGetLineByEvent()
     }
 }
 //=============================================================================
+bool
+GuiTerminal::moreSupported()
+{
+    return false;
+}
+//=============================================================================
+bool
+GuiTerminal::waitMore()
+{
+  if (qtterm) {
+        qtterm->waitKey();
+      lineCounter = 0;
+    }
+
+    return false;
+}

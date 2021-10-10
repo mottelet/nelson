@@ -62,9 +62,9 @@ using namespace Nelson;
 //=============================================================================
 static Nelson::Evaluator* eval = nullptr;
 //=============================================================================
-
 QtTerminal::QtTerminal(QWidget* parent) : QTextBrowser(parent)
 {
+    waitMoreInProgress = false;
     mCommandLineReady = false;
     QLocale us(QLocale::English, QLocale::UnitedStates);
     QLocale::setDefault(us);
@@ -200,6 +200,53 @@ void
 QtTerminal::sendReturnKey()
 {
     lineToSend = L"\n";
+}
+//=============================================================================
+std::wstring
+QtTerminal::waitKey()
+{
+    waitMoreInProgress = true;
+    std::wstring prompt = L"--MORE--";
+    printPrompt(Nelson::wstringToQString(prompt));
+    promptBlock = document()->lastBlock();
+    // enable cursor text
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+    setCursorWidth(QFontMetrics(font()).horizontalAdvance(QChar('x')));
+#else
+    setCursorWidth(QFontMetrics(font()).width(QChar('x')));
+#endif
+    // restore default icon cursor
+    QApplication::restoreOverrideCursor();
+    if (eval == nullptr) {
+        void* veval = GetNelsonMainEvaluatorDynamicFunction();
+        eval = (Nelson::Evaluator*)veval;
+    }
+    bool wasInterruptByAction = false;
+    do {
+        Nelson::ProcessEvents(true);
+        if (!eval->commandQueue.isEmpty()) {
+            wasInterruptByAction = true;
+            break;
+        }
+    } while (!wasInterruptByAction && lineToSend.empty());
+    std::wstring line;
+    if (wasInterruptByAction) {
+        clearLine();
+        line = L"\n";
+    } else {
+        line = lineToSend;
+        while (lineToSend.empty()) {
+            Nelson::ProcessEvents(true);
+        }
+    }
+    lineToSend.clear();
+    Nelson::ProcessEvents();
+    // disable cursor text
+    setCursorWidth(0);
+    // change icon cursor to wait (computation)
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    waitMoreInProgress = false;
+    return line;
 }
 //=============================================================================
 std::wstring
@@ -347,6 +394,18 @@ QtTerminal::sendKeyEvent(QKeyEvent* event)
 void
 QtTerminal::keyPressEvent(QKeyEvent* event)
 {
+    if (waitMoreInProgress) {
+        if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) { 
+          lineToSend = L"\n";
+        }
+        if (event->key() == Qt::Key_Q) {
+            lineToSend = L"q";
+        }
+        if (event->key() == Qt::Key_Space) {
+            lineToSend = L"l";
+        }
+        return;
+    }
     if (!isInEditionZone()) {
         QTextCursor cur = textCursor();
         cur.movePosition(QTextCursor::End);

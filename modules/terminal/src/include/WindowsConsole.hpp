@@ -36,6 +36,8 @@ using namespace Nelson;
 class NLSTERMINAL_IMPEXP WindowsConsole : public Interface
 {
 private:
+    int lineCounter;
+
     HANDLE Win32OutputStream;
     HANDLE Win32InputStream;
     DWORD OldWin32Mode;
@@ -65,6 +67,15 @@ private:
     std::wstring
     getTextLine(const std::wstring& prompt, bool bIsInput);
     bool atPrompt;
+
+    bool
+    moreSupported() override;
+    void
+    incrementLinesMoreCounter();
+    void
+    resetLinesMoreCounter();
+    bool
+    waitMore();
 
 public:
     WindowsConsole(bool _bWithColors = true);
@@ -125,4 +136,5 @@ public:
 
     void
     interruptGetLineByEvent() override;
+
 };

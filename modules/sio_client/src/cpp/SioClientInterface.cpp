@@ -160,5 +160,11 @@ SioClientInterface::getTextLine(const std::string& prompt, bool bIsInput)
     return command;
 }
 //=============================================================================
+bool
+SioClientInterface::moreSupported()
+{
+    return false;
+}
+//=============================================================================
 } // namespace Nelson
 //=============================================================================

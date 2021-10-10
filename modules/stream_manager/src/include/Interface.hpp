@@ -115,6 +115,10 @@ public:
     virtual void
     interruptGetLineByEvent()
         = 0;
+
+    virtual bool
+    moreSupported()
+        = 0;
 };
 //=============================================================================
 } // namespace Nelson

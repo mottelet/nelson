@@ -66,6 +66,9 @@ public:
     void
     interruptGetLineByEvent();
 
+    bool
+    moreSupported() override;
+
 private:
     std::wstring outputBuffer;
 };

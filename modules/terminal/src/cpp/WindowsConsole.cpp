@@ -23,6 +23,7 @@
 // License along with this program. If not, see <http://www.gnu.org/licenses/>.
 // LICENCE_BLOCK_END
 //=============================================================================
+#include <algorithm>
 #include "WindowsConsole.hpp"
 #include "ActionMenu.hpp"
 #include "Evaluator.hpp"
@@ -97,6 +98,7 @@ CtrlHandler(DWORD fdwCtrlType)
 WindowsConsole::WindowsConsole(bool _bWithColors)
 {
     atPrompt = false;
+    lineCounter = 0;
     HWND hwnd = GetConsoleWindow();
     // commented: workaround for fwrite(1,110) crash on windows
     // int old =_setmode(_fileno(stdin), _O_U16TEXT);
@@ -254,8 +256,84 @@ WindowsConsole::outputMessage(const std::wstring& msg)
         atPrompt = false;
         bInterruptGetChar = true;
     }
+
+    size_t nbEOL = std::count(msg.begin(), msg.end(), L'\n');
+    lineCounter = lineCounter + nbEOL;
+    if (lineCounter >= 40) {
+        waitMore();
+    }
+    
     lineObj.printCharacters(_msg, lineObj.STANDARD_OUTPUT);
     diary.writeMessage(_msg);
+
+
+}
+//=============================================================================
+bool
+WindowsConsole::waitMore()
+{
+    bool stopDisplay = false;
+    std::wstring msg = L"-- MORE --";
+    size_t len = msg.length();
+    lineObj.printCharacters(msg, lineObj.STANDARD_OUTPUT);
+    for (;;) {
+        bool bIsAction = false;
+        wchar_t cur_char = getCharacter(bIsAction);
+        bool exitLoop = false;
+        if (!bIsAction) {
+            switch (cur_char) {
+            case CR_1:
+            case CR_2: {
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.backSpace();
+                }
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.putCharacter(L' ', LineManager::STANDARD_OUTPUT);
+                }
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.backSpace();
+                }
+                lineCounter--;
+                exitLoop = true;
+            } break;
+            case L' ': {
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.backSpace();
+                }
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.putCharacter(L' ', LineManager::STANDARD_OUTPUT);
+                }
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.backSpace();
+                }
+                resetLinesMoreCounter();
+                exitLoop = true;
+            } break;
+            case L'q':
+            case L'Q': {
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.backSpace();
+                }
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.putCharacter(L' ', LineManager::STANDARD_OUTPUT);
+                }
+                for (size_t k = 0; k < len; ++k) {
+                    lineObj.backSpace();
+                }
+                exitLoop = true;
+                stopDisplay = true;
+                Nelson::displayInterrupt(1);
+                resetLinesMoreCounter();
+            } break;
+            default: {
+            } break;
+            }
+        }
+        if (exitLoop) {
+            break;
+        }
+    }
+    return stopDisplay;
 }
 //=============================================================================
 void
@@ -575,6 +653,7 @@ WindowsConsole::isCTRL_VKEY(int VKEY)
 void
 WindowsConsole::clearTerminal()
 {
+    resetLinesMoreCounter();
     COORD coord;
     DWORD written;
     CONSOLE_SCREEN_BUFFER_INFO info;
@@ -693,5 +772,23 @@ WindowsConsole::isAtPrompt()
 //=============================================================================
 void
 WindowsConsole::interruptGetLineByEvent()
-{}
+{ }
+//=============================================================================
+bool
+WindowsConsole::moreSupported()
+{
+    return true;
+}
+//=============================================================================
+void
+WindowsConsole::incrementLinesMoreCounter()
+{
+    lineCounter++;
+}
+//=============================================================================
+void
+WindowsConsole::resetLinesMoreCounter()
+{
+    lineCounter = 0;
+}
 //=============================================================================
