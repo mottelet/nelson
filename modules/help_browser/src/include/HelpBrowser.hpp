@@ -32,17 +32,18 @@ public:
     void
     closeBrowser();
     void
-    syncBrowser();
-    void
-    sendCommand(const std::wstring& cmd);
-    void
     destroy();
     void
     clearCache();
     wstringVector
     getAttributes();
     bool
-    isAvailable();
+    isVisible();
+    
+    void
+    hideContents();
+    void
+    setSource(const std::wstring& source);
 
 private:
     HelpBrowser();

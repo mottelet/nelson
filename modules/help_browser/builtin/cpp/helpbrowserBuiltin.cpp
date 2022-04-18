@@ -36,14 +36,11 @@ Nelson::HelpBrowserGateway::helpbrowserBuiltin(int nLhs, const ArrayOfVector& ar
         } else if (param1 == L"-clearcache") {
             nargoutcheck(nLhs, 0, 0);
             HelpBrowser::getInstance()->clearCache();
-        } else if (param1 == L"-isavailable") {
+        } else if (param1 == L"-isvisible") {
             nargoutcheck(nLhs, 0, 1);
             ArrayOfVector retval;
-            retval << ArrayOf::logicalConstructor(HelpBrowser::getInstance()->isAvailable());
+            retval << ArrayOf::logicalConstructor(HelpBrowser::getInstance()->isVisible());
             return retval;
-        } else if (param1 == L"-sync") {
-            nargoutcheck(nLhs, 0, 0);
-            HelpBrowser::getInstance()->syncBrowser();
         } else {
             Error(ERROR_WRONG_ARGUMENT_1_VALUE);
         }
@@ -67,7 +64,6 @@ Nelson::HelpBrowserGateway::helpbrowserBuiltin(int nLhs, const ArrayOfVector& ar
             if ((param2 == L"contents") || (param2 == L"index") || (param2 == L"bookmarks")
                 || (param2 == L"search")) {
                 std::wstring command = L"show " + param2;
-                HelpBrowser::getInstance()->sendCommand(command);
             } else {
                 Error(ERROR_WRONG_ARGUMENT_2_VALUE);
             }
@@ -75,15 +71,15 @@ Nelson::HelpBrowserGateway::helpbrowserBuiltin(int nLhs, const ArrayOfVector& ar
             std::wstring param2 = argIn[1].getContentAsWideString();
             if ((param2 == L"contents") || (param2 == L"index") || (param2 == L"bookmarks")
                 || (param2 == L"search")) {
-                std::wstring command = L"hide " + param2;
-                HelpBrowser::getInstance()->sendCommand(command);
+              if (param2 == L"contents") {
+                    HelpBrowser::getInstance()->hideContents();
+                }
             } else {
                 Error(ERROR_WRONG_ARGUMENT_2_VALUE);
             }
         } else if (param1 == L"-setsource") {
             std::wstring param2 = argIn[1].getContentAsWideString();
-            std::wstring command = L"setSource " + param2;
-            HelpBrowser::getInstance()->sendCommand(command);
+            HelpBrowser::getInstance()->setSource(param2);
         } else {
             Error(ERROR_WRONG_ARGUMENT_1_VALUE);
         }

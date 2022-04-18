@@ -21,12 +21,43 @@
   <ItemGroup>
     <ClCompile Include="..\cpp\HelpBrowser.cpp" />
     <ClCompile Include="..\cpp\HelpCollection.cpp" />
+    <ClCompile Include="..\cpp\moc_QtHelpBrowserWindow.cpp" />
+    <ClCompile Include="..\cpp\QtHelpBrowserWindow.cpp" />
+    <ClCompile Include="..\cpp\QtHelpBrowser.cpp" />
     <ClCompile Include="dllMain.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\HelpBrowser.hpp" />
     <ClInclude Include="..\include\HelpCollection.hpp" />
     <ClInclude Include="..\include\nlsHelp_browser_exports.h" />
+    <ClInclude Include="..\include\QtHelpBrowser.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp"</Command>
+    </ClInclude>
+    <CustomBuild Include="..\include\QtHelpBrowserWindow.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)../cpp/moc_%(Filename).cpp"</Command>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\characters_encoding\src\c\nlsCharacters_encoding.vcxproj">
