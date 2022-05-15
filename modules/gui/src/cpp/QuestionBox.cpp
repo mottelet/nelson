@@ -7,18 +7,29 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 // LICENCE_BLOCK_END
 //=============================================================================
-#pragma once
-//=============================================================================
-#include "ArrayOf.hpp"
-#include "QmlHandleObject.hpp"
-#include "nlsQml_engine_exports.h"
+#include <QtWidgets/QMessageBox>
+#include <QtCore/QObject>
+#include <QtWidgets/QAbstractButton>
+#include <QtCore/QVariant>
+#include "QuestionBox.hpp"
+#include "GetNelsonPath.hpp"
+//#include "QObjectHandleObjectAllocator.hpp"
+#include "QStringConverter.hpp"
+#include "HandleManager.hpp"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
-NLSQML_ENGINE_IMPEXP void
-fieldnamesQmlHandleObject(const ArrayOf& A, bool fullList, wstringVector& fieldnames);
-NLSQML_ENGINE_IMPEXP void
-fieldnamesQmlHandleObject(QmlHandleObject* qmlHandle, bool fullList, wstringVector& fieldnames);
+ArrayOf
+QuestionBox(const std::wstring& title, 
+            const std::string &question,
+            const std::wstring &button1,
+            const std::wstring& button2,
+            const std::wstring& button3,
+            const std::wstring& defaultButton,
+            int numberOfButtons)
+{
+    return ArrayOf();
+}
 //=============================================================================
-} // namespace Nelson
+}
 //=============================================================================

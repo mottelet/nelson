@@ -14,8 +14,8 @@
 //=============================================================================
 namespace Nelson {
 //=============================================================================
-NLSQML_ENGINE_IMPEXP ArrayOf
-GetQmlHandleObject(const ArrayOf& A, const std::wstring& propertyName);
+NLSQML_ENGINE_IMPEXP void
+SetQObjectHandleObject(const ArrayOf& A, const std::wstring& propertyName, const ArrayOf& B);
 //=============================================================================
 } // namespace Nelson
 //=============================================================================

@@ -7,15 +7,15 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 // LICENCE_BLOCK_END
 //=============================================================================
-#include "QmlHandleObject.hpp"
+#pragma once
+//=============================================================================
+#include "ArrayOf.hpp"
+#include "nlsQml_engine_exports.h"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
-QmlHandleObject::QmlHandleObject(void* _ptr)
-    : HandleGenericObject(std::wstring(QOBJECT_CATEGORY_STR), _ptr, false)
-{}
+NLSQML_ENGINE_IMPEXP bool
+DeleteQObjectHandleObject(const ArrayOf& A);
 //=============================================================================
-QmlHandleObject::~QmlHandleObject() = default;
-//=============================================================================
-}
+} // namespace Nelson
 //=============================================================================

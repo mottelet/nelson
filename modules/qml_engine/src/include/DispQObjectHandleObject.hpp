@@ -12,13 +12,13 @@
 #include <string>
 #include "ArrayOf.hpp"
 #include "Interface.hpp"
-#include "QmlHandleObject.hpp"
+#include "QObjectHandleObject.hpp"
 #include "nlsQml_engine_exports.h"
 //=============================================================================
 namespace Nelson {
 //=============================================================================
 NLSQML_ENGINE_IMPEXP void
-DispQmlHandleObject(Interface* io, const ArrayOf& A, const std::string& name);
+DispQObjectHandleObject(Interface* io, const ArrayOf& A, const std::string& name);
 //=============================================================================
 } // namespace Nelson
 //=============================================================================

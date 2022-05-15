@@ -40,7 +40,7 @@ add_library(${module_library_name} SHARED ${GUI_SRC})
 # ==============================================================================
 target_link_libraries(
   ${module_library_name}
-   nlsInterpreter
+  nlsInterpreter
   nlsTypes
   nlsError_manager
   nlsNelson_manager
@@ -69,6 +69,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/include
   ${CMAKE_CURRENT_SOURCE_DIR}/../interpreter/src/include
   ${CMAKE_CURRENT_SOURCE_DIR}/../api_nelson/src/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../data_structures/src/include
   ${CMAKE_CURRENT_SOURCE_DIR}/../i18n/src/include
   ${CMAKE_CURRENT_SOURCE_DIR}/../engine/src/include)
 # ==============================================================================
@@ -80,6 +81,7 @@ target_link_libraries(
   nlsError_manager
   nlsInterpreter
   nlsTypes
+  nlsData_structures
   nlsApi_nelson
   nlsI18n)
 # ==============================================================================
